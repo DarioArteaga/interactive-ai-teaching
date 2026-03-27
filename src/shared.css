@@ -287,14 +287,46 @@
 /* ── Footer ── */
 .landing__footer {
   margin-top: var(--space-2xl);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  animation: fadeUp 0.6s var(--ease-out) 0.4s both;
+}
+
+.landing__footer-label {
   font-size: var(--text-xs);
   color: var(--text-muted);
   letter-spacing: 3px;
-  text-align: center;
-  animation: fadeUp 0.6s var(--ease-out);
-  animation-delay: 0.4s;
-  animation-fill-mode: both;
   font-weight: 600;
+}
+
+.landing__footer-links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.landing__link {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  text-decoration: none;
+  letter-spacing: 2px;
+  font-weight: 700;
+  transition: all var(--duration-fast) var(--ease-out);
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.landing__link:hover {
+  color: var(--text-primary);
+  background: var(--bg-surface-hover);
+}
+
+.landing__link-sep {
+  font-size: 12px;
+  color: var(--border-subtle);
+  font-weight: 300;
 }
 
 /* ── Shared component styles (Inside Modules) ── */

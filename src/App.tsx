@@ -114,9 +114,30 @@ export default function App() {
       </div>
 
       {/* Footer */}
-      <div className="mono landing__footer">
-        CURATED KNOWLEDGE MAPS — AI ENGINEERING
-      </div>
+      <footer className="landing__footer">
+        <div className="mono landing__footer-label">
+          CURATED KNOWLEDGE MAPS — AI ENGINEERING
+        </div>
+        <div className="landing__footer-links">
+          <a
+            href="https://github.com/DarioArteaga"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mono landing__link"
+          >
+            GITHUB
+          </a>
+          <span className="landing__link-sep">/</span>
+          <a
+            href="https://www.linkedin.com/in/darioarteaga"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mono landing__link"
+          >
+            LINKEDIN
+          </a>
+        </div>
+      </footer>
     </div>
   );
 }
