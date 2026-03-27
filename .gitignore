@@ -1,0 +1,44 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Claude
+.claude/
+
+# Node modules
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Editor folders
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# TypeScript / Build residual files
+*.tsbuildinfo
+*.js
+!vite.config.ts
+
+# Temporal files from our sessions
+tmp-*
+/tmp/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
