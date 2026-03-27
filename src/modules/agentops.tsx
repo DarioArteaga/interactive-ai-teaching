@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const stages = [
   {
@@ -95,8 +95,26 @@ export default function AgentOpsRecap() {
   const [showDiag, setShowDiag] = useState(false);
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
+  const [showScrollHint, setShowScrollHint] = useState(true);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => { setMounted(true); }, []);
+  useEffect(() => { 
+    setMounted(true); 
+    
+    const container = scrollContainerRef.current;
+    if (container) {
+      const handleScroll = () => {
+        const { scrollLeft, scrollWidth, clientWidth } = container;
+        if (scrollLeft + clientWidth >= scrollWidth - 10) {
+          setShowScrollHint(false);
+        } else {
+          setShowScrollHint(true);
+        }
+      };
+      container.addEventListener("scroll", handleScroll);
+      return () => container.removeEventListener("scroll", handleScroll);
+    }
+  }, []);
 
   const current = stages.find(s => s.id === activeStage)!;
   const activeIdx = stages.findIndex(s => s.id === activeStage);
@@ -125,7 +143,7 @@ export default function AgentOpsRecap() {
       }} />
 
       {/* Header */}
-      <header style={{
+      <header className="module-header" style={{
         padding: "40px 48px 32px",
         borderBottom: "1px solid var(--border-subtle)",
         display: "flex", justifyContent: "space-between", alignItems: "flex-end",
@@ -138,7 +156,7 @@ export default function AgentOpsRecap() {
             fontSize: "12px", letterSpacing: "6px", color: "var(--text-tertiary)",
             marginBottom: "12px", textTransform: "uppercase", fontWeight: 700,
           }}>
-            AgentOps — Interactive Knowledge Map
+            Interactive AI Knowledge Map — AgentOps
           </div>
           <h1 style={{
             fontSize: "32px", fontWeight: 800, letterSpacing: "-1px",
@@ -250,15 +268,32 @@ export default function AgentOpsRecap() {
         borderBottom: "1px solid var(--border-subtle)",
         position: "relative", zIndex: 1,
       }}>
-        <div className="mono" style={{
-          fontSize: "12px", letterSpacing: "4px", color: "var(--text-tertiary)", marginBottom: "24px", fontWeight: 700
-        }}>
-          LIFECYCLE FLOW
-        </div>
         <div style={{
-          display: "flex", alignItems: "center",
-          overflowX: "auto", paddingBottom: "8px",
+          display: "flex", justifyContent: "space-between", alignItems: "center",
+          marginBottom: "24px"
         }}>
+          <div className="mono" style={{
+            fontSize: "12px", letterSpacing: "4px", color: "var(--text-tertiary)", fontWeight: 700
+          }}>
+            LIFECYCLE FLOW
+          </div>
+          {showScrollHint && (
+            <div className="scroll-hint mono" style={{
+              fontSize: "10px", color: current.color, fontWeight: 700,
+              display: "flex", alignItems: "center", gap: "6px"
+            }}>
+              <span>DESLIZA</span>
+              <span style={{ fontSize: "14px" }}>→</span>
+            </div>
+          )}
+        </div>
+        <div 
+          ref={scrollContainerRef}
+          style={{
+            display: "flex", alignItems: "center",
+            overflowX: "auto", padding: "12px 0",
+          }}
+        >
           {stages.map((stage, i) => {
             const isActive = activeStage === stage.id;
             const isHovered = hoveredNode === stage.id;
@@ -346,12 +381,12 @@ export default function AgentOpsRecap() {
       </div>
 
       {/* Main Content */}
-      <div style={{
+      <div className="module-main-layout" style={{
         display: "flex", minHeight: "calc(100vh - 380px)",
         position: "relative", zIndex: 1,
       }}>
         {/* Left Panel */}
-        <div style={{
+        <div className="module-left-panel" style={{
           width: "380px", flexShrink: 0, padding: "36px",
           borderRight: "1px solid var(--border-subtle)",
           background: "var(--bg-surface)",
@@ -434,7 +469,7 @@ export default function AgentOpsRecap() {
         </div>
 
         {/* Right: Concepts */}
-        <div style={{ flex: 1, padding: "36px 40px", overflowY: "auto", background: "var(--bg-base)" }}>
+        <div className="module-right-content" style={{ flex: 1, padding: "36px 40px", overflowY: "auto", background: "var(--bg-base)" }}>
           <div className="mono" style={{
             fontSize: "12px", letterSpacing: "4px", color: "var(--text-tertiary)", fontWeight: 700,
             marginBottom: "24px", display: "flex", alignItems: "center", gap: "12px",
@@ -447,7 +482,7 @@ export default function AgentOpsRecap() {
             {current.concepts.length} CONCEPTOS
           </div>
 
-          <div style={{
+          <div className="concept-card-grid" style={{
             display: "grid",
             gridTemplateColumns: "repeat(auto-fill, minmax(360px, 1fr))",
             gap: "18px",

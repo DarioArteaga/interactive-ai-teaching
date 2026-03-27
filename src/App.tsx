@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import RAGRecap from "./modules/rag-pipeline";
 import AgentOpsRecap from "./modules/agentops";
 
@@ -11,7 +11,7 @@ const modules = [
     accent: "var(--accent-cyan)",
     component: RAGRecap,
     stages: 8,
-    concepts: 44,
+    concepts: 45,
   },
   {
     id: "agentops",
@@ -28,6 +28,31 @@ const modules = [
 export default function App() {
   const [activeModule, setActiveModule] = useState<string | null>(null);
 
+  // Historial del navegador (Back/Forward)
+  useEffect(() => {
+    const handlePopState = (event: PopStateEvent) => {
+      setActiveModule(event.state?.module || null);
+    };
+    window.addEventListener("popstate", handlePopState);
+    
+    // Al cargar la página por primera vez
+    const initialModule = window.location.hash.replace("#", "");
+    if (initialModule && modules.find(m => m.id === initialModule)) {
+      setActiveModule(initialModule);
+    }
+
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
+
+  const selectModule = (id: string | null) => {
+    setActiveModule(id);
+    if (id) {
+      window.history.pushState({ module: id }, "", `#${id}`);
+    } else {
+      window.history.pushState(null, "", window.location.pathname);
+    }
+  };
+
   const ActiveComponent = modules.find(m => m.id === activeModule)?.component;
 
   if (ActiveComponent) {
@@ -35,7 +60,7 @@ export default function App() {
       <div>
         <button
           className="back-btn mono"
-          onClick={() => setActiveModule(null)}
+          onClick={() => selectModule(null)}
         >
           ← MÓDULOS
         </button>
@@ -72,8 +97,8 @@ export default function App() {
             className="module-card"
             role="button"
             tabIndex={0}
-            onClick={() => setActiveModule(mod.id)}
-            onKeyDown={e => { if (e.key === "Enter" || e.key === " ") setActiveModule(mod.id); }}
+            onClick={() => selectModule(mod.id)}
+            onKeyDown={e => { if (e.key === "Enter" || e.key === " ") selectModule(mod.id); }}
             style={{
               "--card-accent": mod.accent,
               animation: `fadeUp 0.6s var(--ease-out) ${i * 0.12}s both`,
